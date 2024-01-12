@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Westchester Food Banks Map</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <style>
+      #westchesterMap {
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="westchesterMap"></div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+  </body>
+  <script>
+    var map = L.map("westchesterMap").setView([41.1220194, -73.794852], 10); // Center of Westchester County
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "© OpenStreetMap contributors",
+    }).addTo(map);
+
+    function addFoodBank(
+      name,
+      lat,
+      lng,
+      location,
+      hours,
+      requirements,
+      addtlInfo,
+      websiteUrl,
+      directionsUrl
+    ) {
+      var tooltipContent = `<b>${name}</b>`;
+      var popupContent = `<b>${name}</b><br><b>Location:</b> ${location}<br><b>Hours:</b> ${hours}<br>`;
+
+      if (requirements) {
+        popupContent += `<b>Requirements:</b> ${requirements}<br>`;
+      }
+
+      if (addtlInfo) {
+        popupContent += `<b>Additional Info:</b> ${addtlInfo}<br>`;
+      }
+
+      if (websiteUrl) {
+        popupContent += `<a href="${websiteUrl}" target="_blank" style="color: blue; text-decoration: underline;">Website</a><br>`;
+      }
+
+      if (directionsUrl) {
+        popupContent += `<a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+          lat + "," + lng
+        )}" target="_blank" style="color: blue; text-decoration: underline;">Directions</a><br>`;
+      }
+
+      var marker = L.marker([lat, lng]).addTo(map);
+      marker.bindTooltip(tooltipContent); // hover
+      marker.bindPopup(popupContent); // click
+    }
+    // food banks
+    addFoodBank(
+      "Food Bank 1",
+      41.1609,
+      -73.8713,
+      "123 Main St, City",
+      "9-5 Mon-Fri",
+      "ID Required",
+      "Serves area residents only",
+      "http://foodbank1.com",
+      true
+    );
+    addFoodBank(
+      "Food Bank 2",
+      41.033,
+      -73.7629,
+      "456 Elm St, Town",
+      "10-6 Tue-Sat",
+      "Proof of income",
+      "Vegetarian options available",
+      "http://foodbank2.com",
+      true
+    );
+    // ... add more as needed
+  </script>
+</html>
